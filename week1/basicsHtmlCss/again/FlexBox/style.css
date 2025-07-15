@@ -1,0 +1,17 @@
+.navbar {  
+  display: flex;
+  /* justify-content: center; */
+  justify-content:space-around;
+  /* justify-content:space-evenly; */
+  /* justify-content: space-between; */
+  /* flex-direction:row; */
+  background-color: #f0f0f0;
+  padding: 20px 80px;
+  /* text-decoration: none; */ 
+}
+
+.navbar a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
