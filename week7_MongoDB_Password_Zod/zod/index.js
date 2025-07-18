@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const z = require("zod");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { UserModel, TodoModel } = require("./db");
@@ -11,21 +12,45 @@ const app = express();
 app.use(express.json());
 
 
+const signup = z.object({
+  email: z.email(),
+  password: z.string().min(5),
+  name: z.string().min(7),
+});
+
 // SignUp endpoint
 app.post("/signup", async function(req, res) {
-  const email = req.body.email;
-  const password = req.body.password;
-  const name = req.body.name;
+  // const email = req.body.email;
+  // const password = req.body.password;
+  // const name = req.body.name;
 
-  // hashing here
-  const hashed = await bcrypt.hash(password, 5);
-  console.log(hashed);
 
-  await UserModel.create({
-    email: email,
-    password: hashed,
-    name: name,
-  })
+    const parsed = signup.safeParse(req.body);
+
+    if(!parsed.success) {
+      return res.status(400).json({error: "Invalid Input Formate"});
+    }
+
+
+    // instead of writing like this
+
+    // const email = parsed.data.email;
+    // const password = parsed.data.password;
+    // const name = parsed.data.name;
+
+    const { email, password, name } = parsed.data;
+
+
+      // hashing here
+    const hashed = await bcrypt.hash(password, 5);
+    console.log(hashed);
+
+    await UserModel.create({
+      email: email,
+      password: hashed,
+      name: name,
+    });
+
 
   res.json({
     message: "You are logged in my brother!"
